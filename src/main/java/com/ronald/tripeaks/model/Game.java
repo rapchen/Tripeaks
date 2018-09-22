@@ -5,6 +5,7 @@ import lombok.Data;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
+import java.util.List;
 
 /**
  * @author Chen Runwen
@@ -14,6 +15,7 @@ import java.util.Iterator;
 public class Game {
 
     private TableCard[][] table;
+    private int remainTableCardNUm = 28;
     /* 桌面上每张卡的行列数 */
     public static final int[] tableCardsRow = {0,0,0,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,3,3,3,3,3,3,3,3,3,3};
     public static final int[] tableCardsColumn = {0,3,6,0,1,3,4,6,7,0,1,2,3,4,5,6,7,8,0,1,2,3,4,5,6,7,8,9};
@@ -29,7 +31,34 @@ public class Game {
     }
 
     public Boolean solve() {
+        return solve(0, pile[0].getPoint());
+    }
+
+    private Boolean solve(int pilePosition, Card.Point lastPoint) {
+        List<TableCard> removeable = getRemoveableCards();
+        if (removeable != null) {
+            for (TableCard nextCard: removeable) {
+                remove(nextCard);
+                if (remainTableCardNUm == 0) {
+                    return true;
+                }
+                if (solve(pilePosition, nextCard.getPoint())) {
+                    return true;
+                }
+                putback(nextCard);
+            }
+        }
         return false;
+    }
+
+    private void remove(TableCard nextCard) {
+    }
+
+    private void putback(TableCard nextCard) {
+    }
+
+    private List<TableCard> getRemoveableCards() {
+        return null;
     }
 
     private TableCard[][] getTableFromStr(String tableStr) {
