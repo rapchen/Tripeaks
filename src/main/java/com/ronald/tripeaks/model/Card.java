@@ -1,8 +1,10 @@
 package com.ronald.tripeaks.model;
 
 import lombok.Data;
+import lombok.Getter;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -13,7 +15,7 @@ import java.util.Map;
 public class Card {
 
     public enum Suit{
-        NONE(0, "None"), SPADE(1, "Spade"), HEART(2, "Heart"), DIAMOND(3, "Diamond"), CLUB(4, "Club");
+        NONE(0, "_"), SPADE(1, "♠"), HEART(2, "❤"), DIAMOND(3, "♦"), CLUB(4, "♣");
 
         private int index;
         private String str;
@@ -35,11 +37,16 @@ public class Card {
             return map.get(str);
         }
 
+        @Override
+        public String toString() {
+            return str;
+        }
     }
 
+    @Getter
     public enum Point{
         NONE(0, "None"), ACE(1, "A"), TWO(2, "2"), THREE(3, "3"), FOUR(4, "4"), FIVE(5, "5"), SIX(6, "6"),
-        SEVEN(7, "7"), EIGHT(8, "8"), NINE(9, "9"), TEN(10, "10"), JACK(11, "J"), QUEEN(12, "Q"), KING(13, "K");
+        SEVEN(7, "7"), EIGHT(8, "8"), NINE(9, "9"), TEN(10, "0"), JACK(11, "J"), QUEEN(12, "Q"), KING(13, "K");
 
         private int index;
         private String str;
@@ -60,6 +67,18 @@ public class Card {
         public static Point getByName(String str) {
             return map.get(str);
         }
+
+        public int[] getSiblingPoints() {
+            int[] points = new int[2];
+            points[0] = (index - 2) % 13 + 1;
+            points[1] = index % 13 + 1;
+            return points;
+        }
+
+        @Override
+        public String toString() {
+            return str;
+        }
     }
 
     private Suit suit;
@@ -73,5 +92,10 @@ public class Card {
     public Card(String pointStr) {
         this.suit = Suit.NONE;
         this.point = Point.getByName(pointStr);
+    }
+
+    @Override
+    public String toString() {
+        return suit.str + point.str;
     }
 }
